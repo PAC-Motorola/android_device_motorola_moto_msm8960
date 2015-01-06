@@ -37,12 +37,10 @@ start_sensors()
         mkdir -p /data/system/sensors
         touch /data/system/sensors/settings
         chmod -h 775 /data/system/sensors
-        restorecon /data/system/sensors/settings
         chmod -h 664 /data/system/sensors/settings
         chown -h system /data/system/sensors/settings
 
         mkdir -p /data/misc/sensors
-        restorecon /data/misc/sensors
         chmod -h 775 /data/misc/sensors
 
         if [ ! -s /data/system/sensors/settings ]; then
@@ -67,14 +65,6 @@ start_battery_monitor()
 baseband=`getprop ro.baseband`
 izat_premium_enablement=`getprop ro.qc.sdk.izat.premium_enabled`
 
-#
-# Suppress default route installation during RA for IPV6; user space will take
-# care of this
-# exception default ifc
-for file in /proc/sys/net/ipv6/conf/*
-do
-  echo 0 > $file/accept_ra_defrtr
-done
 echo 1 > /proc/sys/net/ipv6/conf/default/accept_ra_defrtr
 
 #

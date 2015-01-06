@@ -21,6 +21,9 @@
 # definition file).
 #
 
+# QCOM SELinux policy
+include device/qcom/sepolicy/sepolicy.mk
+
 # inherit from the proprietary version
 -include vendor/motorola/moto_msm8960/BoardConfigVendor.mk
 
@@ -43,18 +46,19 @@ TARGET_UNIFIED_DEVICE := true
 TARGET_INIT_VENDOR_LIB := libinit_msm
 TARGET_LIBINIT_DEFINES_FILE := device/motorola/moto_msm8960/init/init_moto_msm8960.c
 
-TARGET_QCOM_MEDIA_VARIANT := caf
 TARGET_USES_WCNSS_CTRL := true
+
+BOARD_USES_LEGACY_MMAP := true
 
 # Inline kernel building
 TARGET_KERNEL_SOURCE := kernel/motorola/msm8960dt-common
 TARGET_KERNEL_CONFIG := msm8960_mmi_defconfig
 TARGET_KERNEL_SELINUX_CONFIG := msm8960_mmi_selinux_defconfig
-BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 maxcpus=2 vmalloc=400M androidboot.write_protect=0 zcache androidboot.selinux=permissive
+BOARD_KERNEL_CMDLINE := console=ttyHSL0,115200,n8 androidboot.hardware=qcom user_debug=31 msm_rtb.filter=0x3F ehci-hcd.park=3 maxcpus=2 vmalloc=400M androidboot.write_protect=0 zcache
 BOARD_KERNEL_BASE := 0x80200000
 BOARD_KERNEL_PAGESIZE := 2048
 BOARD_MKBOOTIMG_ARGS := --ramdisk_offset 0x02200000 --dt $(LOCAL_PATH)/dt.img
-BOARD_USERDATAIMAGE_PARTITION_SIZE := 12884901888
+#BOARD_USERDATAIMAGE_PARTITION_SIZE := 12884901888
 
 WLAN_MODULES:
 	mkdir -p $(KERNEL_MODULES_OUT)/prima
@@ -65,11 +69,12 @@ TARGET_KERNEL_MODULES += WLAN_MODULES
 
 # QCOM BSP
 TARGET_USES_QCOM_BSP := true
-COMMON_GLOBAL_CFLAGS += -DQCOM_BSP
 
 # Audio
 BOARD_USES_LEGACY_ALSA_AUDIO := true
 BOARD_USES_MOTOROLA_EMU_AUDIO := true
+QCOM_ANC_HEADSET_ENABLED := false
+QCOM_FLUENCE_ENABLED := false
 
 # Bluetooth
 BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
@@ -78,8 +83,10 @@ BOARD_BLUETOOTH_BDROID_BUILDCFG_INCLUDE_DIR := $(LOCAL_PATH)/bluetooth
 TARGET_PROVIDES_CAMERA_HAL := true
 
 # Graphics
-TARGET_QCOM_DISPLAY_VARIANT := caf
 BOARD_EGL_CFG := $(LOCAL_PATH)/config/egl.cfg
+
+# Media
+TARGET_NO_ADAPTIVE_PLAYBACK := true
 
 # Custom relese tools for unified devices
 TARGET_RELEASETOOLS_EXTENSIONS := device/motorola/moto_msm8960
@@ -91,8 +98,7 @@ TARGET_OTA_ASSERT_DEVICE := moto_msm8960,xt907,scorpion_mini,smq,xt926,vanquish
 TARGET_RECOVERY_PIXEL_FORMAT := "RGBA_8888"
 TARGET_RECOVERY_FSTAB := $(LOCAL_PATH)/rootdir/etc/fstab.qcom
 TARGET_USERIMAGES_USE_EXT4 := true
-TARGET_USERIMAGES_USE_F2FS := true
-BOARD_RECOVERY_SWIPE := true
+TARGET_RECOVERY_FSTYPE_MOUNT_OPTIONS := ext4=max_batch_time=0,commit=1,data=ordered,barrier=1,errors=panic,nodelalloc|f2fs=errors=recover
 
 # TWRP
 TW_EXTERNAL_STORAGE_PATH := "/external_sd"
@@ -100,3 +106,35 @@ TW_EXTERNAL_STORAGE_MOUNT_POINT := "external_sd"
 # Needs to be changed for M
 DEVICE_RESOLUTION := 720x1280
 #DEVICE_RESOLUTION := 540x960
+
+# SELinux
+BOARD_SEPOLICY_DIRS += \
+    device/motorola/moto_msm8960/sepolicy
+
+BOARD_SEPOLICY_UNION += \
+    atvc.te \
+    atvc_core.te \
+    batt_health.te \
+    bootmodem.te \
+    device.te \
+    file.te \
+    file_contexts \
+    hw_revs.te \
+    keystore.te \
+    location.te \
+    mmi-boot-sh.te \
+    mmi-touch-sh.te \
+    mm-pp-daemon.te \
+    mm-qcamerad.te \
+    mpdecision.te \
+    netd.te \
+    platform_app.te \
+    property_contexts \
+    property.te \
+    qdumpd.te \
+    rmt_storage.te \
+    sensors.te \
+    surfaceflinger.te \
+    thermal-engine.te \
+    ueventd.te \
+    whisperd.te

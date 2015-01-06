@@ -62,10 +62,9 @@ lib/pp_proc_plugin.so
 # DRM
 bin/qseecomd
 lib/libQSEEComAPI.so
-vendor/lib/mediadrm/libwvdrmengine.so
 
 # GPS - from N1
--app/com.qualcomm.location.apk
+-app/com.qualcomm.location/com.qualcomm.location.apk
 bin/gpsone_daemon
 bin/gsiff_daemon
 etc/permissions/com.qualcomm.location.xml
@@ -124,13 +123,6 @@ vendor/lib/lib-rtpcore.so
 vendor/lib/lib-rtpdaemoninterface.so
 vendor/lib/lib-rtpsl.so
 
-# Keystore
-vendor/firmware/keymaster/keymaster.b00
-vendor/firmware/keymaster/keymaster.b01
-vendor/firmware/keymaster/keymaster.b02
-vendor/firmware/keymaster/keymaster.b03
-vendor/firmware/keymaster/keymaster.mdt
-
 # Media
 lib/libOmxVenc.so
 lib/libmmparser.so
@@ -148,9 +140,6 @@ etc/firmware/vidcfw.elf
 bin/batt_health
 bin/whisperd
 lib/libmoto_netutil.so
-
-# NFC
-lib/hw/nfc.MSM8960.so
 
 # Postprocessing
 bin/mm-pp-daemon
